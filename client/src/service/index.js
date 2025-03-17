@@ -1,5 +1,13 @@
 import axiosInstance from "@/api/axiosInstance";
 
+const handleError = (error, context) => {
+  console.error(`${context} Error:`, error.response?.data || error.message);
+  return {
+    success: false,
+    message: error.response?.data?.message || "An error occurred",
+  };
+};
+
 export async function registerService(formData) {
   try {
     const { data } = await axiosInstance.post("/auth/register", {
@@ -8,8 +16,7 @@ export async function registerService(formData) {
     });
     return data;
   } catch (error) {
-    console.error("Register API Error:", error.response?.data || error.message);
-    throw error;
+    return handleError(error, "Register API");
   }
 }
 
@@ -18,59 +25,46 @@ export async function loginService(formData) {
     const { data } = await axiosInstance.post("/auth/login", formData);
     return data;
   } catch (error) {
-    console.error("Login API Error:", error.response?.data || error.message);
-    throw error;
+    return handleError(error, "Login API");
   }
 }
 
 export async function checkAuthService() {
-  const accessToken = sessionStorage.getItem("accessToken");
-
-  if (!accessToken) {
-    console.error("No access token found in sessionStorage");
-    return { success: false, message: "Unauthorized: No token provided" };
-  }
-
   try {
+    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+    if (!accessToken) {
+      return { success: false, message: "Unauthorized: No token provided" };
+    }
+
     const { data } = await axiosInstance.get("/auth/check-auth", {
       headers: {
-        Authorization: `Bearer ${JSON.parse(accessToken)}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
-
     return data;
   } catch (error) {
-    console.error("Auth Check Error:", error.response?.data || error.message);
-    return { success: false, message: "Unauthorized: Invalid token" };
+    return handleError(error, "Auth Check");
   }
 }
 
 export async function mediaUploadService(formData, onProgressCallback) {
-  const accessToken = sessionStorage.getItem("accessToken");
-
-  if (!accessToken) {
-    console.error("No access token found in sessionStorage");
-    return { success: false, message: "Unauthorized: No token provided" };
-  }
-
   try {
     const { data } = await axiosInstance.post("/media/upload", formData, {
       headers: {
-        Authorization: `Bearer ${JSON.parse(accessToken)}`,
         "Content-Type": "multipart/form-data",
       },
       onUploadProgress: (progressEvent) => {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         if (onProgressCallback) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           onProgressCallback(percentCompleted);
         }
       },
     });
-
     return data;
   } catch (error) {
-    console.error("Error during media upload:", error.response?.data || error.message);
-    return { success: false, message: error.response?.data?.message || "Upload failed" };
+    return handleError(error, "Media Upload");
   }
 }
 
