@@ -9,42 +9,24 @@ const handleError = (error, context) => {
 };
 
 export async function registerService(formData) {
-  try {
-    const { data } = await axiosInstance.post("/auth/register", {
-      ...formData,
-      role: "user",
-    });
-    return data;
-  } catch (error) {
-    return handleError(error, "Register API");
-  }
+  const { data } = await axiosInstance.post("/auth/register", {
+    ...formData,
+    role: "user",
+  });
+
+  return data;
 }
 
 export async function loginService(formData) {
-  try {
-    const { data } = await axiosInstance.post("/auth/login", formData);
-    return data;
-  } catch (error) {
-    return handleError(error, "Login API");
-  }
+  const { data } = await axiosInstance.post("/auth/login", formData);
+
+  return data;
 }
 
 export async function checkAuthService() {
-  try {
-    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
-    if (!accessToken) {
-      return { success: false, message: "Unauthorized: No token provided" };
-    }
+  const { data } = await axiosInstance.get("/auth/check-auth");
 
-    const { data } = await axiosInstance.get("/auth/check-auth", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return data;
-  } catch (error) {
-    return handleError(error, "Auth Check");
-  }
+  return data;
 }
 
 export async function mediaUploadService(formData, onProgressCallback) {
