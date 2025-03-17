@@ -110,23 +110,45 @@ export const getStudentViewCourseDetails = async (req, res) => {
   
 
 export const checkCoursePurchaseInfo = async (req, res) => {
-  try {
-    const { id, studentId } = req.params;
-    const studentCourses = await StudentCourses.findOne({
-      userId: studentId,
-    });
+  const { id: courseId, studentId } = req.params;
 
-    const ifStudentAlreadyBoughtCurrentCourse =
-      studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+  try {
+    // Validate courseId and studentId
+    if (!courseId || !studentId) {
+      return res.status(400).json({ success: false, message: "Course ID and Student ID are required" });
+    }
+
+    // Fetch the course from the database
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    // Check if the student has purchased the course
+    const hasPurchased = course.students.some(
+      (student) => student.studentId.toString() === studentId
+    );
+
+    if (!hasPurchased) {
+      return res.status(200).json({ success: true, hasPurchased: false });
+    }
+
+    // If the student has purchased the course, return additional details
+    const studentDetails = course.students.find(
+      (student) => student.studentId.toString() === studentId
+    );
+
     res.status(200).json({
       success: true,
-      data: ifStudentAlreadyBoughtCurrentCourse,
+      hasPurchased: true,
+      purchaseDetails: {
+        studentName: studentDetails.studentName,
+        paidAmount: studentDetails.paidAmount,
+      },
     });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+  } catch (error) {
+    console.error("❌ Error checking course purchase info:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+

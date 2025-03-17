@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-  baseURL: "https://e-lms-vb12.onrender.com" || "http://localhost:3000", // Use Vite's env variable
+  baseURL: "https://e-lms-vb12.onrender.com",
   withCredentials: true, // Send cookies with requests
 });
 

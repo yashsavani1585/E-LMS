@@ -139,6 +139,7 @@ export async function fetchStudentViewCourseDetailsService(courseId) {
   return data;
 }
 
+// services/checkCoursePurchaseInfoService.js
 export async function checkCoursePurchaseInfoService(courseId, studentId) {
   try {
     const { data } = await axiosInstance.get(

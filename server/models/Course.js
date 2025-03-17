@@ -108,7 +108,7 @@ const CourseSchema = new mongoose.Schema(
     objectives: { type: String },
     students: [
       {
-        studentId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        studentId: String,
         studentName: String,
         studentEmail: String,
         paidAmount: Number,
