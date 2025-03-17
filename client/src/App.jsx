@@ -114,6 +114,8 @@ import StudentViewCourseDetailsPage from "./Pages/student/course-details";
 import StudentViewCourseProgressPage from "./Pages/student/course-progress";
 import StudentCoursesPage from "./Pages/student/student-courses";
 import PaymentSuccessPage from "./Pages/student/payment-return";
+import AboutUsPage from "./components/student-view/AboutUsPage";
+import ContactUsPage from "./components/student-view/ContactUsPage";
 
 export default function App() {
   const { auth } = useContext(AuthContext);
@@ -131,6 +133,8 @@ export default function App() {
           />
         }
       />
+       <Route path="/about" element={<AboutUsPage />} />
+       <Route path="/contact" element={<ContactUsPage />} />
 
       {/* Instructor Routes */}
       <Route
