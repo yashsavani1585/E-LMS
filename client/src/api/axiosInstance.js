@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+
 const axiosInstance = axios.create({
-    baseURL: 'https://e-lms-vb12.onrender.com',
-    withCredentials: true,
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000", // Use Vite's env variable
+  withCredentials: true, // Send cookies with requests
 });
 
 axiosInstance.interceptors.request.use(

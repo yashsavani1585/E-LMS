@@ -1,12 +1,13 @@
 import express from 'express';
 import { loginUser, registerUser } from "../../controllers/auth-controller/index.js";
 import authenticate from '../../middleware/auth-middleware.js';
+import { handleValidationErrors, validateLogin, validateRegistration } from '../../middleware/validation.js';
 
 const authRouter = express.Router();
 
-authRouter.post("/register", registerUser);
+authRouter.post("/register",validateRegistration, handleValidationErrors, registerUser);
 
-authRouter.post("/login", loginUser);
+authRouter.post("/login",validateLogin, handleValidationErrors, loginUser);
 
 authRouter.get("/check-auth", authenticate, (req, res) => {
     const user = req.user;
