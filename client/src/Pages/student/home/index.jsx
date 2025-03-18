@@ -49,7 +49,7 @@ function StudentHomePage() {
         fetchAllStudentViewCourses()
     }, [])
     return (
-        <div className="min-h-screen px-4 py-9 bg-white">
+        <div className="min-h-screen py-24 px-13 bg-white">
             <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
                 <div className="lg:w-1/2 lg:pr-12">
                     <h1 className="text-4xl font-bold mb-4">Learning that gets you</h1>
