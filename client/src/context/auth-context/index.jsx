@@ -1,7 +1,7 @@
-import { createContext, useState, useEffect, useCallback } from "react";
 import Skeleton from "@/components/ui/skeleton";
 import { initialSignInFormData, initialSignUpFormData } from "@/config";
 import { checkAuthService, loginService, registerService } from "@/service";
+import { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext(null);
 
@@ -14,29 +14,27 @@ export default function AuthProvider({ children }) {
   });
   const [loading, setLoading] = useState(true);
 
-  // Register User
-  const handleRegisterUser = useCallback(async (event) => {
+  async function handleRegisterUser(event) {
     event.preventDefault();
     try {
       const data = await registerService(signUpFormData);
       console.log("User Registered:", data);
-      if (data.success) {
-        setSignUpFormData(initialSignUpFormData); // Reset form after successful registration
-      }
     } catch (error) {
       console.error("Registration Error:", error);
     }
-  }, [signUpFormData]);
+  }
 
-  // Login User
-  const handleLoginUser = useCallback(async (event) => {
+  async function handleLoginUser(event) {
     event.preventDefault();
     try {
       const data = await loginService(signInFormData);
-      console.log("Login Response:", data);
+      console.log(data, "Login Response");
 
       if (data.success) {
-        sessionStorage.setItem("accessToken", data.data.accessToken); // Store token securely
+        sessionStorage.setItem(
+          "accessToken",
+          JSON.stringify(data.data.accessToken)
+        );
         setAuth({
           authenticate: true,
           user: data.data.user,
@@ -50,10 +48,9 @@ export default function AuthProvider({ children }) {
     } catch (error) {
       console.error("Login Error:", error);
     }
-  }, [signInFormData]);
+  }
 
-  // Check Authentication
-  const checkAuthUser = useCallback(async () => {
+  async function checkAuthUser() {
     try {
       const data = await checkAuthService();
       if (data.success) {
@@ -62,7 +59,7 @@ export default function AuthProvider({ children }) {
           user: data.data.user,
         });
       } else {
-        sessionStorage.removeItem("accessToken"); // Clear invalid token
+        sessionStorage.removeItem("accessToken"); // Clear token if invalid
         setAuth({
           authenticate: false,
           user: null,
@@ -70,7 +67,7 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error("Auth Check Error:", error);
-      sessionStorage.removeItem("accessToken"); // Clear token on error
+      sessionStorage.removeItem("accessToken"); // Remove token on error
       setAuth({
         authenticate: false,
         user: null,
@@ -78,37 +75,36 @@ export default function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }
+  
 
-  // Reset Credentials
-  const resetCredentials = useCallback(() => {
-    sessionStorage.removeItem("accessToken"); // Clear token
+  function resetCredentials() {
     setAuth({
       authenticate: false,
       user: null,
     });
-  }, []);
+  }
 
-  // Check authentication on mount
   useEffect(() => {
     checkAuthUser();
-  }, [checkAuthUser]);
-
-  // Context Value
-  const contextValue = {
-    signInFormData,
-    setSignInFormData,
-    signUpFormData,
-    setSignUpFormData,
-    handleRegisterUser,
-    handleLoginUser,
-    auth,
-    resetCredentials,
-  };
+  }, []);
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {loading ? <Skeleton /> : children}
+    <AuthContext.Provider
+      value={{
+        signInFormData,
+        setSignInFormData,
+        signUpFormData,
+        setSignUpFormData,
+        handleRegisterUser,
+        handleLoginUser,
+        auth,
+        resetCredentials, 
+      }}
+    >
+      {
+      loading ? <Skeleton /> : children
+      }
     </AuthContext.Provider>
   );
 }
