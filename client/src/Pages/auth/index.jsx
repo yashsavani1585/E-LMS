@@ -10,9 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signInFormControls, signUpFormControls } from "@/config";
 import { AuthContext } from "@/context/auth-context";
 import { School } from "lucide-react";
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-hot-toast"; // Import toast for notifications
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
@@ -25,72 +24,34 @@ function AuthPage() {
     handleLoginUser,
   } = useContext(AuthContext);
 
-  // Handle tab change
-  const handleTabChange = useCallback((value) => {
+  function handleTabChange(value) {
     setActiveTab(value);
-  }, []);
+  }
 
-  // Validate Sign-In Form
-  const checkIfSignInFormIsValid = useCallback(() => {
+  function checkIfSignInFormIsValid() {
     return (
       signInFormData &&
-      signInFormData.userEmail.trim() !== "" &&
-      signInFormData.password.trim() !== ""
+      signInFormData.userEmail !== "" &&
+      signInFormData.password !== ""
     );
-  }, [signInFormData]);
+  }
 
-  // Validate Sign-Up Form
-  const checkIfSignUpFormIsValid = useCallback(() => {
+  function checkIfSignUpFormIsValid() {
     return (
       signUpFormData &&
-      signUpFormData.userName.trim() !== "" &&
-      signUpFormData.userEmail.trim() !== "" &&
-      signUpFormData.password.trim() !== ""
+      signUpFormData.userName !== "" &&
+      signUpFormData.userEmail !== "" &&
+      signUpFormData.password !== ""
     );
-  }, [signUpFormData]);
+  }
 
-  // Handle Sign-In Submission
-  const handleSignIn = useCallback(
-    async (event) => {
-      event.preventDefault();
-      if (!checkIfSignInFormIsValid()) {
-        toast.error("Please fill in all fields.");
-        return;
-      }
-      try {
-        await handleLoginUser(event);
-        toast.success("Logged in successfully!");
-      } catch (error) {
-        toast.error("Login failed. Please try again.");
-      }
-    },
-    [handleLoginUser, checkIfSignInFormIsValid]
-  );
-
-  // Handle Sign-Up Submission
-  const handleSignUp = useCallback(
-    async (event) => {
-      event.preventDefault();
-      if (!checkIfSignUpFormIsValid()) {
-        toast.error("Please fill in all fields.");
-        return;
-      }
-      try {
-        await handleRegisterUser(event);
-        toast.success("Account created successfully!");
-        setActiveTab("signin"); // Switch to Sign-In tab after successful registration
-      } catch (error) {
-        toast.error("Registration failed. Please try again.");
-      }
-    },
-    [handleRegisterUser, checkIfSignUpFormIsValid]
-  );
+  console.log(signInFormData);
 
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
         <Link to={"/"} className="flex items-center justify-center">
-          <School className="h-8 w-8 mr-4 text-blue-600" />
+        <School className="h-8 w-8 mr-4 text-blue-600" />
           <span className="font-extrabold">BRAINBOOST</span>
         </Link>
       </header>
@@ -120,7 +81,7 @@ function AuthPage() {
                   formData={signInFormData}
                   setFormData={setSignInFormData}
                   isButtonDisabled={!checkIfSignInFormIsValid()}
-                  handleSubmit={handleSignIn}
+                  handleSubmit={handleLoginUser}
                 />
               </CardContent>
             </Card>
@@ -140,7 +101,7 @@ function AuthPage() {
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
                   isButtonDisabled={!checkIfSignUpFormIsValid()}
-                  handleSubmit={handleSignUp}
+                  handleSubmit={handleRegisterUser}
                 />
               </CardContent>
             </Card>
