@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
 
 export const InstructorContext = createContext(null);
@@ -11,22 +11,24 @@ export function InstructorProvider({ children }) {
   const [instructorCoursesList, setInstructorCoursesList] = useState([]);
   const [currentEditedCourseId, setCurrentEditedCourseId] = useState(null);
 
+  // Context Value
+  const contextValue = {
+    courseLandingFormData,
+    setCourseLandingFormData,
+    courseCurriculumFormData,
+    setCourseCurriculumFormData,
+    mediaUploadProgress,
+    setMediaUploadProgress,
+    mediaUploadProgressPercentage,
+    setMediaUploadProgressPercentage,
+    instructorCoursesList,
+    setInstructorCoursesList,
+    currentEditedCourseId,
+    setCurrentEditedCourseId,
+  };
 
   return (
-    <InstructorContext.Provider value={{
-      courseLandingFormData,
-      setCourseLandingFormData,
-      courseCurriculumFormData,
-      setCourseCurriculumFormData,
-      mediaUploadProgress,
-      setMediaUploadProgress,
-      mediaUploadProgressPercentage,
-      setMediaUploadProgressPercentage,
-      instructorCoursesList,
-      setInstructorCoursesList,
-      currentEditedCourseId,
-      setCurrentEditedCourseId
-    }}>
+    <InstructorContext.Provider value={contextValue}>
       {children}
     </InstructorContext.Provider>
   );
