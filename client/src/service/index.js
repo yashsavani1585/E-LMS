@@ -196,17 +196,32 @@ export async function getCurrentCourseProgressService(userId, courseId) {
   return data;
 }
 
-export async function markLectureAsViewedService(userId, courseId, lectureId) {
-  const { data } = await axiosInstance.post(
-    `/student/course-progress/mark-lecture-viewed`,
-    {
-      userId,
-      courseId,
-      lectureId,
-    }
-  );
 
-  return data;
+export async function markLectureAsViewedService(userId, courseId, lectureId) {
+  try {
+    const { data } = await axiosInstance.post(
+      `/student/course-progress/mark-lecture-viewed`,
+      { userId, courseId, lectureId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000, // 10 seconds timeout
+      }
+    );
+    return data;
+  } catch (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      throw new Error(error.response.data.message || 'Failed to mark lecture as viewed');
+    } else if (error.request) {
+      // The request was made but no response was received
+      throw new Error('No response from server. Please check your connection.');
+    } else {
+      // Something happened in setting up the request
+      throw new Error('Request setup error: ' + error.message);
+    }
+  }
 }
 
 export async function resetCourseProgressService(userId, courseId) {

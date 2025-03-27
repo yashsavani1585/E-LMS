@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
+
 const NotFoundPage = () => {
   return (
     <div className="relative flex items-center justify-center min-h-screen w-screen">

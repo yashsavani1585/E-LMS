@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,17 +30,15 @@ function StudentViewCourseProgressPage() {
       const response = await getCurrentCourseProgressService(auth?.user?._id, id);
       if (response?.success) {
         if (!response?.data?.isPurchased) {
-          setLockCourse(true); // Lock the course if not purchased
+          setLockCourse(true);
           return;
         }
   
-        // Proceed with setting course progress
         setStudentCurrentCourseProgress({
           courseDetails: response?.data?.courseDetails,
           progress: response?.data?.progress,
         });
   
-        // Handle completed course
         if (response?.data?.completed) {
           setCurrentLecture(response?.data?.courseDetails?.curriculum[0]);
           setShowCourseCompleteDialog(true);
@@ -48,7 +46,6 @@ function StudentViewCourseProgressPage() {
           return;
         }
   
-        // Find the next lecture to display
         const curriculum = response?.data?.courseDetails?.curriculum || [];
         const progress = response?.data?.progress || [];
   
@@ -62,7 +59,7 @@ function StudentViewCourseProgressPage() {
           return !lectureProgress?.viewed;
         });
   
-        setCurrentLecture(nextLecture || curriculum[0]); // Default to the first lecture
+        setCurrentLecture(nextLecture || curriculum[0]);
       } else {
         console.error("❌ Failed to fetch course progress:", response);
       }
@@ -70,7 +67,6 @@ function StudentViewCourseProgressPage() {
       console.error("❌ Error fetching course progress:", error);
     }
   }
-
 
   async function updateCourseProgress() {
     if (currentLecture) {
@@ -117,7 +113,7 @@ function StudentViewCourseProgressPage() {
   useEffect(() => {
     if (showConfetti) {
       const timer = setTimeout(() => setShowConfetti(false), 15000);
-      return () => clearTimeout(timer); // Cleanup on unmount
+      return () => clearTimeout(timer);
     }
   }, [showConfetti]);
 
@@ -179,18 +175,18 @@ function StudentViewCourseProgressPage() {
             <TabsList className="grid bg-[#1c1d1f] w-full grid-cols-2 p-0 h-14">
               <TabsTrigger
                 value="content"
-                className=" text-black rounded-none h-full"
+                className="text-black rounded-none h-full"
               >
                 Course Content
               </TabsTrigger>
               <TabsTrigger
                 value="overview"
-                className=" text-black rounded-none h-full"
+                className="text-black rounded-none h-full"
               >
                 Overview
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="content">
+            <TabsContent value="content" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
                 <div className="p-4 space-y-4">
                   {studentCurrentCourseProgress?.courseDetails?.curriculum?.map(
@@ -205,7 +201,7 @@ function StudentViewCourseProgressPage() {
                         )?.viewed ? (
                           <Check className="h-4 w-4 text-green-500" />
                         ) : (
-                          <Play className="h-4 w-4 " />
+                          <Play className="h-4 w-4" />
                         )}
                         <span>{item?.title}</span>
                       </div>
@@ -227,6 +223,8 @@ function StudentViewCourseProgressPage() {
           </Tabs>
         </div>
       </div>
+
+      {/* Lock Course Dialog */}
       <Dialog open={lockCourse}>
         <DialogContent className="sm:w-[425px]">
           <DialogHeader>
@@ -237,20 +235,22 @@ function StudentViewCourseProgressPage() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
+      {/* Course Complete Dialog */}
       <Dialog open={showCourseCompleteDialog}>
-        <DialogContent showOverlay={false} className="sm:w-[425px]">
+        <DialogContent className="sm:w-[425px]">
           <DialogHeader>
             <DialogTitle>Congratulations!</DialogTitle>
-            <DialogDescription className="flex flex-col gap-3">
-              <Label>You have completed the course</Label>
-              <div className="flex flex-row gap-3">
-                <Button onClick={() => navigate("/student-courses")}>
-                  My Courses Page
-                </Button>
-                <Button onClick={handleRewatchCourse}>Rewatch Course</Button>
-              </div>
+            <DialogDescription>
+              You have completed the course
             </DialogDescription>
           </DialogHeader>
+          <DialogFooter className="gap-3">
+            <Button onClick={() => navigate("/student-courses")}>
+              My Courses Page
+            </Button>
+            <Button onClick={handleRewatchCourse}>Rewatch Course</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

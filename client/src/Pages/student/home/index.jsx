@@ -1,5 +1,5 @@
 import { courseCategories } from "@/config";
-import banner from "../../../../public/banner-img.png";
+import banner from "../../../../assets/banner-img.png";
 import { Button } from "@/components/ui/button";
 import { StudentContext } from "@/context/student-context";
 import { useContext, useEffect } from "react";
