@@ -82,7 +82,6 @@
 // Lecture Schema
 import mongoose from "mongoose";
 
-// Lecture Schema
 const LectureSchema = new mongoose.Schema({
   title: { type: String, required: true },
   videoUrl: { type: String, required: true },
@@ -90,7 +89,6 @@ const LectureSchema = new mongoose.Schema({
   freePreview: { type: Boolean, default: false },
 });
 
-// Course Schema
 const CourseSchema = new mongoose.Schema(
   {
     instructorId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
