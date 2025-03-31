@@ -30,7 +30,7 @@ app.use(
       "http://localhost:5173",
       "https://e-lms-1.onrender.com",
       "https://e-lms-pearl.vercel.app",
-      "https://e-lms-ys.vercel.app/auth"
+      "https://e-lms-ys.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "DELETE", "PUT"],
