@@ -29,7 +29,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://e-lms-1.onrender.com",
-      "https://e-lms-ruby.vercel.app"
+      "https://e-lms-pearl.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "DELETE", "PUT"],
