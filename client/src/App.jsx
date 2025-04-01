@@ -103,6 +103,7 @@ import { Route, Routes } from "react-router-dom";
 import AuthPage from "./Pages/auth";
 import RouteGuard from "./components/route-guard";
 import { useContext } from "react";
+import { Toaster } from "sonner";
 import { AuthContext } from "./context/auth-context";
 import InstructorDashboardPage from "./Pages/instructor";
 import StudentViewCommonLayout from "./components/student-view/common-layout";
@@ -116,88 +117,85 @@ import StudentCoursesPage from "./Pages/student/student-courses";
 import PaymentSuccessPage from "./Pages/student/payment-return";
 import AboutUsPage from "./components/student-view/AboutUsPage";
 import ContactUsPage from "./components/student-view/ContactUsPage";
-import { Toaster } from "sonner";
 
 export default function App() {
   const { auth } = useContext(AuthContext);
 
   return (
     <>
-      {/* Toast notifications */}
-      <Toaster position="top-center" richColors />
-      
-      {/* Application routes */}
-      <Routes>
-        {/* Authentication Page */}
-        <Route
-          path="/auth"
-          element={
-            <RouteGuard
-              element={<AuthPage />}
-              authenticated={auth?.authenticate}
-              user={auth?.user}
-            />
-          }
-        />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/contact" element={<ContactUsPage />} />
+    <Toaster position="top-center" richColors />
+    <Routes>
 
-        {/* Instructor Routes */}
-        <Route
-          path="/instructor"
-          element={
-            <RouteGuard
-              element={<InstructorDashboardPage />}
-              authenticated={auth?.authenticate}
-              user={auth?.user}
-            />
-          }
-        />
-        <Route
-          path="/instructor/create-new-course"
-          element={
-            <RouteGuard
-              element={<AddNewCoursePage />}
-              authenticated={auth?.authenticate}
-              user={auth?.user}
-            />
-          }
-        />
-        <Route
-          path="/instructor/edit-course/:courseId"
-          element={
-            <RouteGuard
-              element={<AddNewCoursePage />}
-              authenticated={auth?.authenticate}
-              user={auth?.user}
-            />
-          }
-        />
+      {/* Authentication Page */}
+      <Route
+        path="/auth"
+        element={
+          <RouteGuard
+            element={<AuthPage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+       <Route path="/about" element={<AboutUsPage />} />
+       <Route path="/contact" element={<ContactUsPage />} />
 
-        {/* Student View Routes */}
-        <Route
-          path="/"
-          element={
-            <RouteGuard
-              element={<StudentViewCommonLayout />}
-              authenticated={auth?.authenticate}
-              user={auth?.user}
-            />
-          }
-        >
-          <Route index element={<StudentHomePage />} />
-          <Route path="" element={<StudentHomePage />} />
-          <Route path="home" element={<StudentHomePage />} />
-          <Route path="courses" element={<StudentViewCoursesPage />} />
-          <Route path="course/details/:id" element={<StudentViewCourseDetailsPage />} />
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="student-courses" element={<StudentCoursesPage />} />
-          <Route path="course-progress/:id" element={<StudentViewCourseProgressPage />} />
-        </Route>
+      {/* Instructor Routes */}
+      <Route
+        path="/instructor"
+        element={
+          <RouteGuard
+            element={<InstructorDashboardPage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/instructor/create-new-course"
+        element={
+          <RouteGuard
+            element={<AddNewCoursePage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/instructor/edit-course/:courseId"
+        element={
+          <RouteGuard
+            element={<AddNewCoursePage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
 
-        {/* 404 Not Found Page */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      {/* Student View Routes */}
+      <Route
+        path="/"
+        element={
+          <RouteGuard
+            element={<StudentViewCommonLayout />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      >
+        <Route index element={<StudentHomePage />} />
+        <Route path="" element={<StudentHomePage />} />
+        <Route path="home" element={<StudentHomePage />} />
+        <Route path="courses" element={<StudentViewCoursesPage />} />
+        <Route path="course/details/:id" element={<StudentViewCourseDetailsPage />} />
+        <Route path="payment-success" element={<PaymentSuccessPage />} />
+        <Route path="student-courses" element={<StudentCoursesPage />} />
+        <Route path="course-progress/:id" element={<StudentViewCourseProgressPage />} />
+      </Route>
+
+      {/* 404 Not Found Page */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
     </>
   );
 }
