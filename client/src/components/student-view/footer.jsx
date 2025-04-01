@@ -49,7 +49,7 @@ function StudentViewCommonFooter() {
             <h3 className="font-bold text-lg">Follow Us</h3>
             <div className="flex space-x-4">
               <a
-                // href="https://facebook.com"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white"
@@ -57,7 +57,7 @@ function StudentViewCommonFooter() {
                 <Facebook className="h-6 w-6" />
               </a>
               <a
-                // href="https://twitter.com"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white"
@@ -65,7 +65,7 @@ function StudentViewCommonFooter() {
                 <Twitter className="h-6 w-6" />
               </a>
               <a
-                // href="https://instagram.com"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white"
