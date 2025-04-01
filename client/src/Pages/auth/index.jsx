@@ -11,10 +11,12 @@ import { signInFormControls, signUpFormControls } from "@/config";
 import { AuthContext } from "@/context/auth-context";
 import { School } from "lucide-react";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
+  const navigate = useNavigate();
   const {
     signInFormData,
     setSignInFormData,
@@ -45,13 +47,39 @@ function AuthPage() {
     );
   }
 
-  console.log(signInFormData);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await handleRegisterUser(e);
+      toast.success("Registration successful! Please sign in.");
+      setActiveTab("signin"); // Switch to sign in tab
+      // Reset form data if needed
+      setSignUpFormData({
+        userName: "",
+        userEmail: "",
+        password: "",
+      });
+    } catch (error) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    }
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await handleLoginUser(e);
+      toast.success("Login successful!");
+      navigate("/"); // Redirect to home page after successful login
+    } catch (error) {
+      toast.error(error.message || "Login failed. Please try again.");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
         <Link to={"/"} className="flex items-center justify-center">
-        <School className="h-8 w-8 mr-4 text-blue-600" />
+          <School className="h-8 w-8 mr-4 text-blue-600" />
           <span className="font-extrabold">BRAINBOOST</span>
         </Link>
       </header>
@@ -81,7 +109,7 @@ function AuthPage() {
                   formData={signInFormData}
                   setFormData={setSignInFormData}
                   isButtonDisabled={!checkIfSignInFormIsValid()}
-                  handleSubmit={handleLoginUser}
+                  handleSubmit={handleSignIn}
                 />
               </CardContent>
             </Card>
@@ -101,7 +129,7 @@ function AuthPage() {
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
                   isButtonDisabled={!checkIfSignUpFormIsValid()}
-                  handleSubmit={handleRegisterUser}
+                  handleSubmit={handleSignUp}
                 />
               </CardContent>
             </Card>
