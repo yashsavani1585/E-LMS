@@ -29,7 +29,8 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://e-lms-1.onrender.com",
-      "https://e-lms-delta.vercel.app"
+      "https://e-lms-delta.vercel.app",
+      "https://brainboostcom.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "DELETE", "PUT"],
