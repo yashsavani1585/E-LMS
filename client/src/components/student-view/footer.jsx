@@ -2,6 +2,14 @@ import { Link } from "react-router-dom";
 import { School, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 function StudentViewCommonFooter() {
+  // Social media click handlers that prevent default behavior
+  const handleSocialClick = (platform) => {
+    // You can add analytics or other logic here
+    console.log(`Navigating to ${platform}`);
+    // In a real app, you would actually navigate to the social media URL
+    // window.open(`https://${platform}.com/brainboost`, '_blank');
+  };
+
   return (
     <footer className="bg-gray-900 text-white py-8 mt-16">
       <div className="container mx-auto px-4">
@@ -48,38 +56,30 @@ function StudentViewCommonFooter() {
           <div className="space-y-4">
             <h3 className="font-bold text-lg">Follow Us</h3>
             <div className="flex space-x-4">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+              <button
+                onClick={() => handleSocialClick('facebook')}
+                className="text-gray-400 hover:text-white focus:outline-none"
               >
                 <Facebook className="h-6 w-6" />
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+              </button>
+              <button
+                onClick={() => handleSocialClick('twitter')}
+                className="text-gray-400 hover:text-white focus:outline-none"
               >
                 <Twitter className="h-6 w-6" />
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+              </button>
+              <button
+                onClick={() => handleSocialClick('instagram')}
+                className="text-gray-400 hover:text-white focus:outline-none"
               >
                 <Instagram className="h-6 w-6" />
-              </a>
-              <a
-                // href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+              </button>
+              <button
+                onClick={() => handleSocialClick('linkedin')}
+                className="text-gray-400 hover:text-white focus:outline-none"
               >
                 <Linkedin className="h-6 w-6" />
-              </a>
+              </button>
             </div>
           </div>
 
