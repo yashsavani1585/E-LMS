@@ -148,7 +148,7 @@ function StudentViewCourseDetailsPage() {
             email: auth?.user?.userEmail,
           },
           theme: {
-            color: "#3399cc",
+            color: "#37474F",
           },
         };
 
