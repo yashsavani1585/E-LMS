@@ -118,7 +118,8 @@ function StudentViewCourseDetailsPage() {
         sessionStorage.setItem("currentOrderId", JSON.stringify(response?.data?.orderId));
 
         const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          // key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          key : "rzp_test_z8VHG8l7lxwyLF",
           amount: response.data.amount,
           currency: "INR",
           name: "BRAINBOOST",
