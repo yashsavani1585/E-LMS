@@ -22,7 +22,7 @@ function CourseCurriculum() {
   } = useContext(InstructorContext);
 
   const bulkUploadInputRef= useRef(null)
-  // Add a new lecture
+
   function handleNewLecture() {
     setCourseCurriculumFormData([
       ...courseCurriculumFormData,
@@ -32,28 +32,21 @@ function CourseCurriculum() {
     ]);
   }
 
-  // Update lecture title
+
   function handleCourseTitleChange(event, index) {
     let updatedCurriculum = [...courseCurriculumFormData];
     updatedCurriculum[index].title = event.target.value;
     setCourseCurriculumFormData(updatedCurriculum);
   }
 
-  // Toggle free preview option
+ 
   function handleFreePreviewChange(value, index) {
     let updatedCurriculum = [...courseCurriculumFormData];
     updatedCurriculum[index].freePreview = value;
     setCourseCurriculumFormData(updatedCurriculum);
   }
 
-  // Delete lecture
-  // function handleDeleteLecture(index) {
-  //   let updatedCurriculum = [...courseCurriculumFormData];
-  //   updatedCurriculum.splice(index, 1);
-  //   setCourseCurriculumFormData(updatedCurriculum);
-  // }
-
-  // Handle video upload
+ 
   async function handleSingleLectureUpload(event, index) {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -64,7 +57,7 @@ function CourseCurriculum() {
         setMediaUploadProgress(true);
         const response = await mediaUploadService(videoFormData, setMediaUploadProgressPercentage);
         
-        // Check if the upload was successful
+  
         if (response.success) {
           let updatedFormData = [...courseCurriculumFormData];
           updatedFormData[index] = {
@@ -74,7 +67,7 @@ function CourseCurriculum() {
           };
           setCourseCurriculumFormData(updatedFormData);
 
-          // Log video URL for debugging
+ 
           console.log("Uploaded Video URL:", response?.data?.media?.secure_url);
         } else {
           console.error("Upload failed:", response?.message);
@@ -82,7 +75,7 @@ function CourseCurriculum() {
       } catch (error) {
         console.error("Error uploading video:", error);
       } finally {
-        setMediaUploadProgress(false); // Reset progress after upload is finished
+        setMediaUploadProgress(false); 
       }
     }
   }
@@ -144,11 +137,11 @@ function CourseCurriculum() {
      console.log(response, "bulk");
      if (response?.success) {
       let cpyCourseCurriculumFormdata = areAllCourseCurriculumFormDataObjectsEmpty(courseCurriculumFormData)?[]:[...courseCurriculumFormData];
-      // console.log(cpyCourseCurriculumFormdata,"cpyCourseCurriculumFormdata");
+      
       cpyCourseCurriculumFormdata = [
         ...cpyCourseCurriculumFormdata,
         ...response?.data?.map((item, index) => ({
-          videoUrl: item?.secure_url || item?.url, // Use direct access
+          videoUrl: item?.secure_url || item?.url, 
           public_id: item?.public_id,
           title: `Lecture ${cpyCourseCurriculumFormdata.length + (index + 1)}`,
           freePreview: false,
@@ -181,7 +174,7 @@ function CourseCurriculum() {
 
 
 
-  console.log(courseCurriculumFormData); // Log curriculum form data for debugging
+  console.log(courseCurriculumFormData);
 
   return (
     <Card>
