@@ -5,12 +5,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Register User
+
 export const registerUser = async (req, res) => {
     try {
         const { userName, userEmail, password, role } = req.body;
 
-        // Check if user already exists
+        
         const existingUser = await User.findOne({
             $or: [{ userEmail: userEmail }, { userName: userName }],
         });
@@ -22,10 +22,10 @@ export const registerUser = async (req, res) => {
             });
         }
 
-        // Hash password
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user
+        
         const newUser = new User({
             userName,
             userEmail,
@@ -48,12 +48,12 @@ export const registerUser = async (req, res) => {
     }
 };
 
-// Login User
+
 export const loginUser = async (req, res) => {
     try {
         const { userEmail, password } = req.body;
 
-        // Find user by email
+
         const user = await User.findOne({ userEmail: userEmail });
 
         if (!user) {
@@ -63,7 +63,7 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        // Compare password
+        
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -72,7 +72,7 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        // Generate JWT token
+        
         const accessToken = jwt.sign(
             {
                 _id: user._id,
