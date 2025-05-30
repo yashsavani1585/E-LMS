@@ -19,7 +19,7 @@ export default function AuthProvider({ children }) {
     try {
       const data = await registerService(signUpFormData);
       console.log("User Registered:", data);
-      // Optionally auto-login user here or show message
+
     } catch (error) {
       console.error("Registration Error:", error);
     }
@@ -32,7 +32,7 @@ export default function AuthProvider({ children }) {
       console.log(data, "Login Response");
 
       if (data.success) {
-        // Store token as plain string (no JSON.stringify)
+
         sessionStorage.setItem("accessToken", data.data.accessToken);
         setAuth({
           authenticate: true,
