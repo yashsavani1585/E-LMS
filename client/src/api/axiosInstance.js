@@ -28,8 +28,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL:"https://e-lms-vb12.onrender.com"
-  withCredentials: true, // Send cookies with requests
+  baseURL: "https://e-lms-vb12.onrender.com",
+  withCredentials: true, // ✅ Comma added after baseURL
 });
 
 axiosInstance.interceptors.request.use(
@@ -50,4 +50,3 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
-
