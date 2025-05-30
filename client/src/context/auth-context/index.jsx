@@ -19,6 +19,7 @@ export default function AuthProvider({ children }) {
     try {
       const data = await registerService(signUpFormData);
       console.log("User Registered:", data);
+      // Optionally auto-login user here or show message
     } catch (error) {
       console.error("Registration Error:", error);
     }
@@ -31,10 +32,8 @@ export default function AuthProvider({ children }) {
       console.log(data, "Login Response");
 
       if (data.success) {
-        sessionStorage.setItem(
-          "accessToken",
-          JSON.stringify(data.data.accessToken)
-        );
+        // Store token as plain string (no JSON.stringify)
+        sessionStorage.setItem("accessToken", data.data.accessToken);
         setAuth({
           authenticate: true,
           user: data.data.user,
@@ -52,14 +51,20 @@ export default function AuthProvider({ children }) {
 
   async function checkAuthUser() {
     try {
+      const token = sessionStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
       const data = await checkAuthService();
+
       if (data.success) {
         setAuth({
           authenticate: true,
           user: data.data.user,
         });
       } else {
-        sessionStorage.removeItem("accessToken"); // Clear token if invalid
+        sessionStorage.removeItem("accessToken");
         setAuth({
           authenticate: false,
           user: null,
@@ -67,7 +72,7 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error("Auth Check Error:", error);
-      sessionStorage.removeItem("accessToken"); // Remove token on error
+      sessionStorage.removeItem("accessToken");
       setAuth({
         authenticate: false,
         user: null,
@@ -76,9 +81,9 @@ export default function AuthProvider({ children }) {
       setLoading(false);
     }
   }
-  
 
   function resetCredentials() {
+    sessionStorage.removeItem("accessToken");
     setAuth({
       authenticate: false,
       user: null,
@@ -99,12 +104,10 @@ export default function AuthProvider({ children }) {
         handleRegisterUser,
         handleLoginUser,
         auth,
-        resetCredentials, 
+        resetCredentials,
       }}
     >
-      {
-      loading ? <Skeleton /> : children
-      }
+      {loading ? <Skeleton /> : children}
     </AuthContext.Provider>
   );
 }
