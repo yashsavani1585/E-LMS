@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: "https://e-lms-vb12.onrender.com" || "http://localhost:3000",
-  withCredentials: true, // Send cookies with requests
+  withCredentials: true, 
 });
 
 axiosInstance.interceptors.request.use(
