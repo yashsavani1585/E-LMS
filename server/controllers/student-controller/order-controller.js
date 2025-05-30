@@ -7,18 +7,18 @@ import crypto from "crypto";
 
 dotenv.config();
 
-// Initialize Razorpay
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Create a Razorpay order
+
 export const createOrder = async (req, res) => {
   try {
     const { userId, userName, userEmail, courseId, courseTitle, coursePricing } = req.body;
 
-    // Validate required fields
+ 
     if (!userId || !courseId || !coursePricing) {
       return res.status(400).json({
         success: false,
@@ -26,7 +26,7 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    // Create a Razorpay order
+    
     const razorpayOrder = await razorpay.orders.create({
       amount: coursePricing * 100, // Convert to paise
       currency: "INR",
@@ -34,7 +34,7 @@ export const createOrder = async (req, res) => {
       notes: { courseTitle, userId, userEmail },
     });
 
-    // Save the order details in the database
+    
     const newOrder = new Order({
       userId,
       userName,
@@ -43,19 +43,18 @@ export const createOrder = async (req, res) => {
       courseTitle,
       coursePricing,
       orderId: razorpayOrder.id,
-      razorpay_order_id: razorpayOrder.id, // Store Razorpay order ID
-      amount: razorpayOrder.amount, // Amount in paise
-      currency: razorpayOrder.currency, // Currency (INR)
-      orderStatus: "pending", // Default status
-      paymentStatus: "initiated", // Default status
-      // razorpay_payment_id and razorpay_signature are not set here
+      razorpay_order_id: razorpayOrder.id, 
+      amount: razorpayOrder.amount, 
+      currency: razorpayOrder.currency, 
+      orderStatus: "pending", 
+      paymentStatus: "initiated", 
     });
 
     await newOrder.save();
 
     console.log("New Order Created:", newOrder);
 
-    // Return the Razorpay order ID and other details to the frontend
+    
     res.status(201).json({
       success: true,
       data: {
@@ -74,7 +73,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Capture Razorpay payment and finalize order
+
 export const capturePaymentAndFinalizeOrder = async (req, res) => {
   try {
     console.log("Received payment data:", req.body);
@@ -108,7 +107,7 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
       });
     }
 
-    // Update order details
+
     order.paymentStatus = "confirmed";
     order.orderStatus = "confirmed";
     order.razorpay_payment_id = razorpay_payment_id;
@@ -116,13 +115,13 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
 
     await order.save();
 
-    // Enroll student in course
+
     const course = await Course.findById(order.courseId);
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found!" });
     }
 
-    // Add student to course if not already enrolled
+
     const isAlreadyEnrolled = course.students.some(
       (student) => student.studentId.toString() === order.userId.toString()
     );
@@ -132,13 +131,13 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
         studentId: order.userId,
         studentName: order.userName,
         studentEmail: order.userEmail,
-        paidAmount: order.amount / 100, // Convert paise to INR
+        paidAmount: order.amount / 100, 
       });
 
       await course.save();
     }
 
-    // Add course to student's enrolled courses
+  
     let studentCourses = await StudentCourses.findOne({ userId: order.userId });
 
     if (!studentCourses) {
