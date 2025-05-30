@@ -25,21 +25,20 @@ function StudentViewCourseDetailsPage() {
   const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] = useState(null);
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
   const [error, setError] = useState(null);
-  const [hasPurchased, setHasPurchased] = useState(false); // Track purchase status
+  const [hasPurchased, setHasPurchased] = useState(false); 
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
 
-  // Fetch course details and check purchase status
+
   useEffect(() => {
     if (id) {
       setCurrentCourseDetailsId(id);
       fetchStudentViewCourseDetails(id);
-      checkIfUserHasPurchasedCourse(id); // Check if the user has already purchased the course
-    }
+      checkIfUserHasPurchasedCourse(id); 
   }, [id]);
 
-  // Fetch course details
+  
   async function fetchStudentViewCourseDetails(courseId) {
     if (!courseId) {
       console.error("Course ID is missing");
@@ -62,16 +61,16 @@ function StudentViewCourseDetailsPage() {
     }
   }
 
-  // Check if the user has already purchased the course
+  
   async function checkIfUserHasPurchasedCourse(courseId) {
     if (!auth?.user?._id || !courseId) return;
 
     try {
       const response = await checkCoursePurchaseInfoService(courseId, auth.user._id);
       if (response?.success && response?.hasPurchased) {
-        setHasPurchased(true); // User has already purchased the course
+        setHasPurchased(true); 
       } else {
-        setHasPurchased(false); // User has not purchased the course
+        setHasPurchased(false); 
       }
     } catch (error) {
       console.error("Error checking purchase status:", error);
@@ -79,14 +78,14 @@ function StudentViewCourseDetailsPage() {
     }
   }
 
-  // Redirect to /student-courses if the user has already purchased the course
+
   useEffect(() => {
     if (hasPurchased) {
       navigate("/student-courses");
     }
   }, [hasPurchased, navigate]);
 
-  // Handle payment creation
+  
   async function handleCreatePayment() {
     setError(null);
 
@@ -118,7 +117,7 @@ function StudentViewCourseDetailsPage() {
         sessionStorage.setItem("currentOrderId", JSON.stringify(response?.data?.orderId));
 
         const options = {
-          // key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
           key : "rzp_test_z8VHG8l7lxwyLF",
           amount: response.data.amount,
           currency: "INR",
@@ -163,7 +162,7 @@ function StudentViewCourseDetailsPage() {
     }
   }
 
-  // Load Razorpay script
+  
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -179,12 +178,12 @@ function StudentViewCourseDetailsPage() {
     };
   }, []);
 
-  // Show free preview dialog
+
   useEffect(() => {
     if (displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true);
   }, [displayCurrentVideoFreePreview]);
 
-  // Reset state when navigating away
+
   useEffect(() => {
     if (!location.pathname.includes("course/details")) {
       setStudentViewCourseDetails(null);
@@ -203,7 +202,7 @@ function StudentViewCourseDetailsPage() {
 
   return (
     <div className="mx-auto py-24 px-12 md:px-12 max-w-7xl">
-      {!hasPurchased && ( // Only show course details if the user hasn't purchased the course
+      {!hasPurchased && ( 
         <>
           <div className="bg-gray-900 text-white p-6 md:p-8 rounded-t-lg">
             <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">
