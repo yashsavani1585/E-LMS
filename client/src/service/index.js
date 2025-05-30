@@ -24,7 +24,15 @@ export async function loginService(formData) {
 }
 
 export async function checkAuthService() {
-  const { data } = await axiosInstance.get("/auth/check-auth");
+  const token = sessionStorage.getItem("accessToken"); // ✅ No JSON.parse
+
+  if (!token) throw new Error("No access token found");
+
+  const { data } = await axiosInstance.get("/auth/check-auth", {
+    headers: {
+      Authorization: `Bearer ${token}`, // ✅ Standard Bearer token format
+    },
+  });
 
   return data;
 }
