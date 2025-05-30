@@ -31,12 +31,13 @@ function StudentViewCourseDetailsPage() {
   const location = useLocation();
 
 
-  useEffect(() => {
-    if (id) {
-      setCurrentCourseDetailsId(id);
-      fetchStudentViewCourseDetails(id);
-      checkIfUserHasPurchasedCourse(id); 
-  }, [id]);
+useEffect(() => {
+  if (id) {
+    setCurrentCourseDetailsId(id);
+    fetchStudentViewCourseDetails(id);
+    checkIfUserHasPurchasedCourse(id); 
+  }
+}, [id]);
 
   
   async function fetchStudentViewCourseDetails(courseId) {
