@@ -4,10 +4,10 @@ import { createOrder, capturePaymentAndFinalizeOrder } from "../../controllers/s
 
 const studentOrderRoutes = express.Router();
 
-// Create an order (Razorpay Only)
+
 studentOrderRoutes.post("/create", createOrder);
 
-// Capture and finalize payment (Razorpay Only)
+
 studentOrderRoutes.post("/capture", capturePaymentAndFinalizeOrder);
 
 export default studentOrderRoutes;
