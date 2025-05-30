@@ -10,20 +10,20 @@ import studentViewOrderRoutes from "./routes/student-routes/order-routes.js";
 import studentCoursesRoutes from "./routes/student-routes/student-courses-routes.js";
 import studentCourseProgressRoutes from "./routes/student-routes/course-progress-routes.js";
 
-// Load environment variables
+
 dotenv.config();
 
-// Initialize Express
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+
 connectDB();
 
-// Middleware
+
 app.use(express.json());
 
-// CORS Configuration (Allow Multiple Origins)
+
 app.use(
   cors({
     origin: [
@@ -38,7 +38,7 @@ app.use(
   })
 );
 
-// Routes
+
 app.use("/auth", authRouter);
 app.use("/media", mediaRouter);
 app.use("/instructor/course", instructorCourseRoutes);
@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
   res.send("123456");
 });
 
-// Error Handling Middleware (Always at the bottom)
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
