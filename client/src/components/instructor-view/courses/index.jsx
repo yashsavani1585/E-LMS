@@ -55,13 +55,7 @@ function InstructorCourses({ listOfCourses }) {
             <TableBody>
               {listOfCourses && listOfCourses.length > 0 ? (
                 listOfCourses.map((course) => {
-                  // Debugging logs inside map function
-                  // console.log("Students:", course?.students?.length ?? 0);
-                  // console.log("Pricing:", course?.pricing ?? 0);
-                  // console.log(
-                  //   "Revenue:",
-                  //   (course?.students?.length ?? 0) * (course?.pricing ?? 0)
-                  // );
+
 
                   return (
                     <TableRow key={course?._id}>
@@ -69,7 +63,7 @@ function InstructorCourses({ listOfCourses }) {
                       <TableCell>{course?.students?.length ?? 0}</TableCell>
                       <TableCell>
                         ₹{
-                          // course?.pricing
+                          
                         ((course?.students?.length ?? 0) * (course?.pricing ?? 0)).toFixed(2)
                         }
                       </TableCell>
