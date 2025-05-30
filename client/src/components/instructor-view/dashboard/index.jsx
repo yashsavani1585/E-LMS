@@ -10,7 +10,7 @@ import {
 import { Users } from "lucide-react";
 
 function InstructorDashboard({ listOfCourses = [] }) {
-  // Check if listOfCourses is valid
+  
   if (!Array.isArray(listOfCourses) || listOfCourses.length === 0) {
     return <div className="text-center text-gray-500">No courses available.</div>;
   }
@@ -51,7 +51,7 @@ function InstructorDashboard({ listOfCourses = [] }) {
       value: totalStudents,
     },
     {
-      icon: () => <span className="text-lg font-bold">₹</span>, // Indian Rupee Symbol
+      icon: () => <span className="text-lg font-bold">₹</span>,
       label: "Total Revenue",
       value: `₹${totalProfit}`,
     },
