@@ -52,8 +52,7 @@ function AuthPage() {
     try {
       await handleRegisterUser(e);
       toast.success("Registration successful! Please sign in.");
-      setActiveTab("signin"); // Switch to sign in tab
-      // Reset form data if needed
+      setActiveTab("signin"); 
       setSignUpFormData({
         userName: "",
         userEmail: "",
@@ -69,7 +68,7 @@ function AuthPage() {
     try {
       await handleLoginUser(e);
       toast.success("Login successful!");
-      navigate("/"); // Redirect to home page after successful login
+      navigate("/"); 
     } catch (error) {
       toast.error(error.message || "Login failed. Please try again.");
     }
