@@ -24,13 +24,13 @@ export async function loginService(formData) {
 }
 
 export async function checkAuthService() {
-  const token = sessionStorage.getItem("accessToken"); // ✅ No JSON.parse
+  const token = sessionStorage.getItem("accessToken"); 
 
   if (!token) throw new Error("No access token found");
 
   const { data } = await axiosInstance.get("/auth/check-auth", {
     headers: {
-      Authorization: `Bearer ${token}`, // ✅ Standard Bearer token format
+      Authorization: `Bearer ${token}`, 
     },
   });
 
@@ -123,22 +123,6 @@ export async function fetchStudentViewCourseListService(query) {
 }
 
 
-// export async function fetchStudentViewCourseDetailsService(courseId) {
-//   if (!courseId) {
-//     console.error("fetchStudentViewCourseDetailsService: courseId is undefined");
-//     return null;
-//   }
-
-//   try {
-//     console.log(`Fetching course details for ID: ${courseId}`); // Debugging
-//     const { data } = await axiosInstance.get(`/student/course/get/details/${courseId}`);
-//     return data;
-//   } catch (error) {
-//     console.error("Error fetching course details:", error);
-//     return null;
-//   }
-// }
-
 export async function fetchStudentViewCourseDetailsService(courseId) {
   const { data } = await axiosInstance.get(
     `/student/course/get/details/${courseId}`
@@ -147,7 +131,7 @@ export async function fetchStudentViewCourseDetailsService(courseId) {
   return data;
 }
 
-// services/checkCoursePurchaseInfoService.js
+
 export async function checkCoursePurchaseInfoService(courseId, studentId) {
   try {
     const { data } = await axiosInstance.get(
@@ -214,19 +198,16 @@ export async function markLectureAsViewedService(userId, courseId, lectureId) {
         headers: {
           'Content-Type': 'application/json',
         },
-        timeout: 10000, // 10 seconds timeout
+        timeout: 10000, 
       }
     );
     return data;
   } catch (error) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
+    if (error.response) {     
       throw new Error(error.response.data.message || 'Failed to mark lecture as viewed');
-    } else if (error.request) {
-      // The request was made but no response was received
+    } else if (error.request) {     
       throw new Error('No response from server. Please check your connection.');
     } else {
-      // Something happened in setting up the request
       throw new Error('Request setup error: ' + error.message);
     }
   }
