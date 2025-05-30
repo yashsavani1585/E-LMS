@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import Course from "../../models/Course.js";
-// import Student from "../../models/Student.js"; // Ensure this is imported
 import StudentCourses from "../../models/StudentCourses.js";
 
 export const getAllStudentViewCourses = async (req, res) => {
@@ -70,18 +69,18 @@ export const getAllStudentViewCourses = async (req, res) => {
 
 export const getStudentViewCourseDetails = async (req, res) => {
   try {
-    const { id: courseId } = req.params;  // ✅ Correctly extracting 'courseId'
+    const { id: courseId } = req.params;  
 
-    // Validate courseId before querying
-    if (!courseId || !mongoose.Types.ObjectId.isValid(courseId)) {  // ✅ Check if defined
+   
+    if (!courseId || !mongoose.Types.ObjectId.isValid(courseId)) {  
       return res.status(400).json({
         success: false,
         message: "Invalid or missing course ID",
       });
     }
 
-    // Fetch course details
-    const courseDetails = await Course.findById(courseId);  // ✅ Use 'courseId'
+    
+    const courseDetails = await Course.findById(courseId);  
 
     if (!courseDetails) {
       return res.status(404).json({
@@ -113,18 +112,18 @@ export const checkCoursePurchaseInfo = async (req, res) => {
   const { id: courseId, studentId } = req.params;
 
   try {
-    // Validate courseId and studentId
+    
     if (!courseId || !studentId) {
       return res.status(400).json({ success: false, message: "Course ID and Student ID are required" });
     }
 
-    // Fetch the course from the database
+    
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found" });
     }
 
-    // Check if the student has purchased the course
+    
     const hasPurchased = course.students.some(
       (student) => student.studentId.toString() === studentId
     );
@@ -133,7 +132,7 @@ export const checkCoursePurchaseInfo = async (req, res) => {
       return res.status(200).json({ success: true, hasPurchased: false });
     }
 
-    // If the student has purchased the course, return additional details
+    
     const studentDetails = course.students.find(
       (student) => student.studentId.toString() === studentId
     );
