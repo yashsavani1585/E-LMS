@@ -1,20 +1,25 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-
-// Load environment variables from .env file
-dotenv.config();
 
 export const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            // Optional: useCreateIndex, useFindAndModify are no longer necessary in recent Mongoose versions
-        });
-
-        console.log(`✅ MongoDB connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.error("❌ Error connecting to MongoDB:", error.message);
-        process.exit(1); // Exit process with failure
-    }
+  try {
+    mongoose.set("strictQuery", false); // optional: prevents strict query warnings
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB connected successfully.");
+  } catch (error) {
+    console.error("❌ Error connecting to MongoDB:", error.message);
+    process.exit(1); // stop the app if DB connection fails
+  }
 };
+
+// Optional: helpful events for debugging
+mongoose.connection.on("disconnected", () => {
+  console.log("⚠️ MongoDB disconnected.");
+});
+
+mongoose.connection.on("reconnected", () => {
+  console.log("🔄 MongoDB reconnected.");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("💥 MongoDB connection error:", err);
+});
