@@ -4,7 +4,7 @@ import { deleteMediaFromCloudinary, uploadMediaToCloudinary } from '../../helper
 
 const mediaRouter = express.Router();
 
-// const upload = multer({ dest: "uploads/" });
+
 
 const upload = multer({ dest: "uploads/" });
 

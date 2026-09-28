@@ -3,14 +3,14 @@ import CourseProgress from "../../models/CourseProgress.js";
 import Course from "../../models/Course.js";
 import StudentCourses from "../../models/StudentCourses.js";
 
-// Mark a lecture as viewed
+
 export const markCurrentLectureAsViewed = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
     const { userId, courseId, lectureId } = req.body;
 
-    // Validate inputs
+    
     if (!userId || !courseId || !lectureId) {
       await session.abortTransaction();
       return res.status(400).json({
@@ -19,7 +19,7 @@ export const markCurrentLectureAsViewed = async (req, res) => {
       });
     }
 
-    // Validate ObjectIds
+  
     if (
       !mongoose.Types.ObjectId.isValid(userId) ||
       !mongoose.Types.ObjectId.isValid(courseId) ||
@@ -32,7 +32,7 @@ export const markCurrentLectureAsViewed = async (req, res) => {
       });
     }
 
-    // Check if user has purchased the course
+   
     const studentCourse = await StudentCourses.findOne({ userId }).session(session);
     if (!studentCourse || !studentCourse.courses.some(c => c.courseId.toString() === courseId)) {
       await session.abortTransaction();
@@ -42,7 +42,7 @@ export const markCurrentLectureAsViewed = async (req, res) => {
       });
     }
 
-    // Verify lecture exists in course
+   
     const course = await Course.findById(courseId).session(session);
     if (!course) {
       await session.abortTransaction();
@@ -64,7 +64,7 @@ export const markCurrentLectureAsViewed = async (req, res) => {
       });
     }
 
-    // Find or create progress
+   
     let progress = await CourseProgress.findOne({ userId, courseId }).session(session);
     
     if (!progress) {
@@ -94,7 +94,7 @@ export const markCurrentLectureAsViewed = async (req, res) => {
       }
     }
 
-    // Check if all lectures are viewed
+  
     const totalLectures = course.curriculum.length;
     const viewedLectures = progress.lecturesProgress.filter(lp => lp.viewed).length;
     
@@ -124,12 +124,12 @@ export const markCurrentLectureAsViewed = async (req, res) => {
   }
 };
 
-// Get current course progress
+
 export const getCurrentCourseProgress = async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
-    // Validate inputs
+    
     if (!userId || !courseId) {
       return res.status(400).json({
         success: false,
@@ -137,7 +137,7 @@ export const getCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Validate ObjectIds
+    
     if (
       !mongoose.Types.ObjectId.isValid(userId) ||
       !mongoose.Types.ObjectId.isValid(courseId)
@@ -148,7 +148,7 @@ export const getCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Check course purchase status
+   
     const studentCourse = await StudentCourses.findOne({ userId });
     const isPurchased = studentCourse?.courses.some(c => c.courseId.toString() === courseId) || false;
 
@@ -160,7 +160,7 @@ export const getCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Get course details
+   
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({
@@ -169,7 +169,7 @@ export const getCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Get progress
+    
     const progress = await CourseProgress.findOne({ userId, courseId });
 
     res.status(200).json({
@@ -192,7 +192,7 @@ export const getCurrentCourseProgress = async (req, res) => {
   }
 };
 
-// Reset course progress
+
 export const resetCurrentCourseProgress = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -200,7 +200,7 @@ export const resetCurrentCourseProgress = async (req, res) => {
   try {
     const { userId, courseId } = req.body;
 
-    // Validate inputs
+    
     if (!userId || !courseId) {
       await session.abortTransaction();
       return res.status(400).json({
@@ -209,7 +209,7 @@ export const resetCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Validate ObjectIds
+   
     if (
       !mongoose.Types.ObjectId.isValid(userId) ||
       !mongoose.Types.ObjectId.isValid(courseId)
@@ -221,7 +221,7 @@ export const resetCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Check if progress exists
+    
     const progress = await CourseProgress.findOne({ userId, courseId }).session(session);
     if (!progress) {
       await session.abortTransaction();
@@ -231,7 +231,7 @@ export const resetCurrentCourseProgress = async (req, res) => {
       });
     }
 
-    // Reset progress
+   
     progress.lecturesProgress = [];
     progress.completed = false;
     progress.completionDate = null;

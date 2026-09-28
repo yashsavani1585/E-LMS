@@ -1,85 +1,4 @@
-// import mongoose from "mongoose";
 
-
-// const LectureSchema = new mongoose.Schema({
-//     title: String,
-//     videoUrl: String,
-//     public_id: String,
-//     freePreview: Boolean,
-//   });
-  
-//   const CourseSchema = new mongoose.Schema({
-//     instructorId: String,
-//     instructorName: String,
-//     date: Date,
-//     title: String,
-//     category: String,
-//     level: String,
-//     primaryLanguage: String,
-//     subtitle: String,
-//     description: String,
-//     image: String,
-//     welcomeMessage: String,
-//     pricing: Number,
-//     objectives: String,
-//     students: [
-//       {
-//         studentId: String,
-//         studentName: String,
-//         studentEmail: String,
-//         paidAmount: String,
-//       },
-//     ],
-//     curriculum: [LectureSchema],
-//     isPublised: Boolean,
-//   });
-  
-//   // Prevent Mongoose model overwrite error
-// const Course = mongoose.models.Course || mongoose.model("Course", CourseSchema);
-
-// export default Course;
-
-// import mongoose from "mongoose";
-
-// const LectureSchema = new mongoose.Schema({
-//   title: String,
-//   videoUrl: String,
-//   public_id: String,
-//   freePreview: Boolean,
-// });
-
-// const CourseSchema = new mongoose.Schema({
-//   instructorId: String,
-//   instructorName: String,
-//   date: Date,
-//   title: String,
-//   category: String,
-//   level: String,
-//   primaryLanguage: String,
-//   subtitle: String,
-//   description: String,
-//   image: String,
-//   welcomeMessage: String,
-//   pricing: Number,
-//   objectives: String,
-//   students: [
-//     {
-//       studentId: String,
-//       studentName: String,
-//       studentEmail: String,
-//       paidAmount: Number,
-//     },
-//   ],
-//   curriculum: [LectureSchema],
-//   isPublished: Boolean,
-// });
-
-// const Course = mongoose.models.Course || mongoose.model("Course", CourseSchema);
-// export default Course;
-
-// import mongoose from "mongoose";
-
-// Lecture Schema
 import mongoose from "mongoose";
 
 const LectureSchema = new mongoose.Schema({
@@ -112,14 +31,14 @@ const CourseSchema = new mongoose.Schema(
         paidAmount: Number,
       },
     ],
-    studentCount: { type: Number, default: 0 }, // 🆕 Student count field
+    studentCount: { type: Number, default: 0 }, 
     curriculum: [LectureSchema],
     isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-// Automatically update student count
+
 CourseSchema.pre("save", function (next) {
   this.studentCount = this.students.length;
   next();

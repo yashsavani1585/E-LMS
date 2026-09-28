@@ -15,7 +15,7 @@ function ContactUsPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to backend)
+
     console.log("Form Data:", formData);
     alert("Thank you for contacting us! We will get back to you soon.");
     setFormData({ name: "", email: "", message: "" });
@@ -24,7 +24,7 @@ function ContactUsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-16">
       <div className="container mx-auto px-4">
-        {/* Hero Section */}
+
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Contact Us
@@ -34,7 +34,7 @@ function ContactUsPage() {
           </p>
         </div>
 
-        {/* Contact Info */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white p-8 rounded-lg shadow-md text-center">
             <Mail className="h-12 w-12 text-blue-600 mb-4 mx-auto" />
@@ -53,7 +53,7 @@ function ContactUsPage() {
           </div>
         </div>
 
-        {/* Contact Form */}
+        
         <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
           <form onSubmit={handleSubmit}>

@@ -63,32 +63,44 @@ import studentViewOrderRoutes from "./routes/student-routes/order-routes.js";
 import studentCoursesRoutes from "./routes/student-routes/student-courses-routes.js";
 import studentCourseProgressRoutes from "./routes/student-routes/course-progress-routes.js";
 
-// Load environment variables first
+// ======================================================
+// ENV
+// ======================================================
+
 dotenv.config();
 
-// Use reliable public DNS for MongoDB SRV lookup
+// ======================================================
+// DNS
+// ======================================================
+
 dns.setServers([
   "8.8.8.8",
   "1.1.1.1",
 ]);
 
+// ======================================================
+// APP
+// ======================================================
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// Allowed frontend origins
+// ======================================================
+// CORS
+// ======================================================
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://e-lms-1.onrender.com",
   "https://e-lms-delta.vercel.app",
+  "https://brainboostcom.vercel.app",
 ];
 
-// CORS
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without origin
-      // (Postman, mobile apps, server-to-server requests, etc.)
+      // Allow Postman / mobile / server-to-server
       if (!origin) {
         return callback(null, true);
       }
@@ -97,6 +109,8 @@ app.use(
         return callback(null, true);
       }
 
+      console.log("❌ CORS blocked:", origin);
+
       return callback(
         new Error(`CORS blocked for origin: ${origin}`)
       );
@@ -104,7 +118,14 @@ app.use(
 
     credentials: true,
 
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH",
+      "OPTIONS",
+    ],
 
     allowedHeaders: [
       "Content-Type",
@@ -113,20 +134,40 @@ app.use(
   })
 );
 
-// Body parser
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+// ======================================================
+// BODY PARSER
+// ======================================================
 
-// Health check
+app.use(
+  express.json({
+    limit: "10mb",
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "10mb",
+  })
+);
+
+// ======================================================
+// HEALTH CHECK
+// ======================================================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "E-LMS API is running 🚀",
-    environment: process.env.NODE_ENV || "development",
+    environment:
+      process.env.NODE_ENV || "development",
   });
 });
 
-// API routes
+// ======================================================
+// API ROUTES
+// ======================================================
+
 app.use("/auth", authRouter);
 
 app.use("/media", mediaRouter);
@@ -156,7 +197,10 @@ app.use(
   studentCourseProgressRoutes
 );
 
-// 404 handler
+// ======================================================
+// 404 HANDLER
+// ======================================================
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -164,7 +208,10 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
+// ======================================================
+// GLOBAL ERROR HANDLER
+// ======================================================
+
 app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err);
 
@@ -185,7 +232,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server only after MongoDB connection
+// ======================================================
+// START SERVER
+// ======================================================
+
 const startServer = async () => {
   try {
     console.log("🔄 Connecting to MongoDB...");
@@ -196,6 +246,7 @@ const startServer = async () => {
       console.log(
         `🚀 Server is running on port ${PORT}`
       );
+
       console.log(
         `🌍 Environment: ${
           process.env.NODE_ENV || "development"
@@ -214,17 +265,27 @@ const startServer = async () => {
 
 startServer();
 
-// Graceful shutdown
+// ======================================================
+// GRACEFUL SHUTDOWN
+// ======================================================
+
 const shutdown = async (signal) => {
-  console.log(`\n🛑 ${signal} received. Shutting down...`);
+  console.log(
+    `\n🛑 ${signal} received. Shutting down...`
+  );
 
   try {
     process.exit(0);
   } catch (error) {
-    console.error("❌ Shutdown error:", error);
+    console.error(
+      "❌ Shutdown error:",
+      error
+    );
+
     process.exit(1);
   }
 };
 
 process.on("SIGINT", () => shutdown("SIGINT"));
+
 process.on("SIGTERM", () => shutdown("SIGTERM"));

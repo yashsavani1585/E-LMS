@@ -24,7 +24,7 @@ function PaymentSuccessPage() {
 
     const processPayment = async () => {
       try {
-        // Step 1: Capture and finalize payment
+
         const paymentResponse = await captureAndFinalizePaymentService(orderId, paymentId, razorpaySignature);
         if (!paymentResponse?.success) {
           console.error("❌ Payment capture failed:", paymentResponse);
@@ -32,17 +32,17 @@ function PaymentSuccessPage() {
           return;
         }
 
-        // Step 2: Use the data from paymentResponse directly
+
         const { courseTitle, coursePricing, orderId: responseOrderId } = paymentResponse.data;
 
-        // Step 3: Update state with order details
+        
         setOrderDetails({
           courseTitle,
           coursePricing,
           orderId: responseOrderId,
         });
 
-        sessionStorage.removeItem("currentOrderId"); // Clear session storage
+        sessionStorage.removeItem("currentOrderId"); 
       } catch (error) {
         console.error("❌ Error processing payment:", error);
         navigate("/payment-failed");
@@ -67,7 +67,7 @@ function PaymentSuccessPage() {
   }
 
   if (!orderDetails) {
-    return null; // or redirect to an error page
+    return null; 
   }
 
   return (

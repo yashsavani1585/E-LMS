@@ -50,7 +50,7 @@ function InstructorDashboardpage() {
 
     return (
         <div className="flex h-full min-h-screen bg-gray-100">
-            {/* Sidebar */}
+        
             <aside className="w-64 bg-white shadow-md hidden md:block">
                 <div className="p-4">
                     <h2 className="text-2xl font-bold mb-4">Instructor View</h2>
@@ -70,7 +70,7 @@ function InstructorDashboardpage() {
                 </div>
             </aside>
 
-            {/* Main Content */}
+         
             <main className="flex-1 p-8 overflow-y-auto">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-3xl font-bold mb-8">Dashboard</h1>

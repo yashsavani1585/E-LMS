@@ -5,7 +5,7 @@ function AboutUsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-16">
       <div className="container mx-auto px-4">
-        {/* Hero Section */}
+        
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             About BRAINBOOST
@@ -15,7 +15,7 @@ function AboutUsPage() {
           </p>
         </div>
 
-        {/* Mission Section */}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <div className="bg-white p-8 rounded-lg shadow-md">
             <School className="h-12 w-12 text-blue-600 mb-4" />
@@ -33,7 +33,7 @@ function AboutUsPage() {
           </div>
         </div>
 
-        {/* Features Section */}
+        
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Why Choose BRAINBOOST?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -61,7 +61,7 @@ function AboutUsPage() {
           </div>
         </div>
 
-        {/* Call to Action */}
+        
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Start Learning?</h2>
           <p className="text-lg text-gray-600 mb-8">

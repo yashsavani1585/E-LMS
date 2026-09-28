@@ -7,9 +7,10 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
-// =============================
-// ✅ Register User
-// =============================
+// ======================================================
+// REGISTER USER
+// ======================================================
+
 export const registerUser = async (req, res) => {
   try {
     const { userName, userEmail, password, role } = req.body;
@@ -22,9 +23,12 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // Check for existing user
+    // Check if user already exists
     const existingUser = await User.findOne({
-      $or: [{ userEmail }, { userName }],
+      $or: [
+        { userEmail: userEmail },
+        { userName: userName },
+      ],
     });
 
     if (existingUser) {
@@ -45,6 +49,7 @@ export const registerUser = async (req, res) => {
       role,
     });
 
+    // Save user
     await newUser.save();
 
     return res.status(201).json({
@@ -52,31 +57,39 @@ export const registerUser = async (req, res) => {
       message: "User registered successfully!",
     });
   } catch (error) {
-    console.error("Register Error:", error.message);
+    console.error("❌ Register Error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error:
+        process.env.NODE_ENV === "production"
+          ? undefined
+          : error.message,
     });
   }
 };
 
-// =============================
-// ✅ Login User
-// =============================
+// ======================================================
+// LOGIN USER
+// ======================================================
+
 export const loginUser = async (req, res) => {
   try {
     const { userEmail, password } = req.body;
 
-    // Validate inputs
+    // Validate fields
     if (!userEmail || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required.",
+        message: "Email and password are required!",
       });
     }
 
-    // Find user by email
-    const user = await User.findOne({ userEmail });
+    // Find user
+    const user = await User.findOne({
+      userEmail: userEmail,
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -85,8 +98,11 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -95,7 +111,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // Generate token
+    // Generate JWT
     const accessToken = jwt.sign(
       {
         _id: user._id,
@@ -104,12 +120,14 @@ export const loginUser = async (req, res) => {
         role: user.role,
       },
       JWT_SECRET,
-      { expiresIn: "2h" }
+      {
+        expiresIn: "2h",
+      }
     );
 
     return res.status(200).json({
       success: true,
-      message: "Login successful!",
+      message: "Logged in successfully",
       data: {
         accessToken,
         user: {
@@ -121,10 +139,15 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Login Error:", error.message);
+    console.error("❌ Login Error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error:
+        process.env.NODE_ENV === "production"
+          ? undefined
+          : error.message,
     });
   }
 };

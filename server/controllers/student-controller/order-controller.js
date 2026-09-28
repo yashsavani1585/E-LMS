@@ -5,26 +5,35 @@ import StudentCourses from "../../models/StudentCourses.js";
 import dotenv from "dotenv";
 import crypto from "crypto";
 dotenv.config();
+
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+
+
 export const createOrder = async (req, res) => {
   try {
     const { userId, userName, userEmail, courseId, courseTitle, coursePricing } = req.body;
 
+ 
     if (!userId || !courseId || !coursePricing) {
       return res.status(400).json({
         success: false,
         message: "Invalid order data. Missing required fields.",
       });
     }
+
+    
     const razorpayOrder = await razorpay.orders.create({
       amount: coursePricing * 100, // Convert to paise
       currency: "INR",
       receipt: `order_${courseId.slice(0, 10)}_${Date.now().toString().slice(-6)}`,
       notes: { courseTitle, userId, userEmail },
     });
+
+    
     const newOrder = new Order({
       userId,
       userName,
@@ -38,9 +47,15 @@ export const createOrder = async (req, res) => {
       currency: razorpayOrder.currency, 
       orderStatus: "pending", 
       paymentStatus: "initiated",
+      amount: razorpayOrder.amount, 
+      currency: razorpayOrder.currency, 
+      orderStatus: "pending", 
+      paymentStatus: "initiated", 
     });
     await newOrder.save();
     console.log("New Order Created:", newOrder);
+
+    
     res.status(201).json({
       success: true,
       data: {
@@ -58,6 +73,8 @@ export const createOrder = async (req, res) => {
     });
   }
 };
+
+
 export const capturePaymentAndFinalizeOrder = async (req, res) => {
   try {
     console.log("Received payment data:", req.body);
@@ -87,15 +104,21 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
         message: "Invalid payment signature!",
       });
     }
+
+
     order.paymentStatus = "confirmed";
     order.orderStatus = "confirmed";
     order.razorpay_payment_id = razorpay_payment_id;
     order.razorpay_signature = razorpay_signature;
     await order.save();
+
+
     const course = await Course.findById(order.courseId);
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found!" });
     }
+
+
     const isAlreadyEnrolled = course.students.some(
       (student) => student.studentId.toString() === order.userId.toString()
     );
@@ -104,10 +127,12 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
         studentId: order.userId,
         studentName: order.userName,
         studentEmail: order.userEmail,
-        paidAmount: order.amount / 100, // Convert paise to INR
+        paidAmount: order.amount / 100, 
       });
       await course.save();
     }
+
+  
     let studentCourses = await StudentCourses.findOne({ userId: order.userId });
     if (!studentCourses) {
       studentCourses = new StudentCourses({ userId: order.userId, courses: [] });

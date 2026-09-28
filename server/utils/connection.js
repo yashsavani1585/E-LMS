@@ -38,7 +38,9 @@ export const connectDB = async () => {
     mongoose.set("strictQuery", false);
 
     if (!process.env.MONGO_URI) {
-      throw new Error("MONGO_URI is not defined in environment variables");
+      throw new Error(
+        "MONGO_URI is not defined in environment variables"
+      );
     }
 
     await mongoose.connect(process.env.MONGO_URI, {
@@ -61,14 +63,17 @@ export const connectDB = async () => {
   }
 };
 
+// MongoDB disconnected
 mongoose.connection.on("disconnected", () => {
   console.log("⚠️ MongoDB disconnected.");
 });
 
+// MongoDB reconnected
 mongoose.connection.on("reconnected", () => {
   console.log("🔄 MongoDB reconnected.");
 });
 
+// MongoDB connection error
 mongoose.connection.on("error", (error) => {
   console.error(
     "💥 MongoDB connection error:",
