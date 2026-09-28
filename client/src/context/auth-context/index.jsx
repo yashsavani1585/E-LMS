@@ -16,11 +16,18 @@ export default function AuthProvider({ children }) {
 
   async function handleRegisterUser(event) {
     event.preventDefault();
+
+    if (signUpFormData.password !== signUpFormData.confirmPassword) {
+      throw new Error("Passwords do not match.");
+    }
+
     try {
       const data = await registerService(signUpFormData);
       console.log("User Registered:", data);
+      return data;
     } catch (error) {
       console.error("Registration Error:", error);
+      throw error;
     }
   }
 
@@ -28,61 +35,52 @@ export default function AuthProvider({ children }) {
     event.preventDefault();
     try {
       const data = await loginService(signInFormData);
-      console.log(data, "Login Response");
+      console.log("Login Response:", data);
 
       if (data.success) {
-        sessionStorage.setItem(
-          "accessToken",
-          JSON.stringify(data.data.accessToken)
-        );
+        sessionStorage.setItem("accessToken", data.data.accessToken);
         setAuth({
           authenticate: true,
           user: data.data.user,
         });
       } else {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
+        throw new Error(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login Error:", error);
+      throw error;
     }
   }
 
   async function checkAuthUser() {
     try {
+      const token = sessionStorage.getItem("accessToken");
+      if (!token) throw new Error("No token found");
+
       const data = await checkAuthService();
+
       if (data.success) {
         setAuth({
           authenticate: true,
           user: data.data.user,
+          Authorization: `Bearer ${token}`,
         });
       } else {
-        sessionStorage.removeItem("accessToken"); // Clear token if invalid
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
+        sessionStorage.removeItem("accessToken");
+        setAuth({ authenticate: false, user: null });
       }
     } catch (error) {
       console.error("Auth Check Error:", error);
-      sessionStorage.removeItem("accessToken"); // Remove token on error
-      setAuth({
-        authenticate: false,
-        user: null,
-      });
+      sessionStorage.removeItem("accessToken");
+      setAuth({ authenticate: false, user: null });
     } finally {
       setLoading(false);
     }
   }
-  
 
   function resetCredentials() {
-    setAuth({
-      authenticate: false,
-      user: null,
-    });
+    sessionStorage.removeItem("accessToken");
+    setAuth({ authenticate: false, user: null });
   }
 
   useEffect(() => {
@@ -99,12 +97,10 @@ export default function AuthProvider({ children }) {
         handleRegisterUser,
         handleLoginUser,
         auth,
-        resetCredentials, 
+        resetCredentials,
       }}
     >
-      {
-      loading ? <Skeleton /> : children
-      }
+      {loading ? <Skeleton /> : children}
     </AuthContext.Provider>
   );
 }
